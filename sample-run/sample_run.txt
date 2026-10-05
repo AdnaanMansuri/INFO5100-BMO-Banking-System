@@ -1,0 +1,80 @@
+
+==================================================================
+  1. Create clients
+==================================================================
+Created: Individual Alice Nguyen (id=C001)
+Created: Student Bob Tremblay (id=C002)
+Created: SmallBusiness Cafe Mont (id=C003)
+Created: Minor Dave Junior (id=C004)
+Created: OtherBankClient Erin Scotia (id=C005)  <- client of another bank (cannot own BMO accounts)
+
+==================================================================
+  2. owns : add accounts (BMOClient 1 -- 0..* Account)
+==================================================================
+Alice Nguyen now owns 4 accounts:
+   - SavingAccount #A100 (balance=2500.0)  (owner = Alice Nguyen)
+   - CheckingAccount #A101 (balance=800.0)  (owner = Alice Nguyen)
+   - InvestmentAccount #A102 (balance=15000.0)  (owner = Alice Nguyen)
+   - LoanAccount #A103 (balance=-12000.0)  (owner = Alice Nguyen)
+
+==================================================================
+  3. owns : multiplicity violation (an account has exactly 1 owner)
+==================================================================
+Bob tries to also take Alice's savings account A100...
+ERROR [owns]: account A100 already belongs to Alice Nguyen - an account must have exactly one owner.
+   -> add succeeded? false
+Bob owns 0 account(s).
+
+==================================================================
+  4. owns : remove via Account.removeOwner(), then re-list
+==================================================================
+Alice closes her investment account A102 (driven from the Account side)...
+Alice Nguyen now owns 3 accounts:
+   - SavingAccount #A100 (balance=2500.0)
+   - CheckingAccount #A101 (balance=800.0)
+   - LoanAccount #A103 (balance=-12000.0)
+
+==================================================================
+  5. enrolsIn : enrol a client (1 -- 0..1)
+==================================================================
+Enrolled: Alice Nguyen -> [LoyaltyAccount #L900 (points=0)]
+Alice tries to enrol in a SECOND loyalty account...
+ERROR [enrolsIn]: Alice Nguyen is already enrolled (a client may have at most one loyalty account).
+   -> second enrolment succeeded? false
+Bob tries to grab Alice's loyalty account L900...
+ERROR [enrolsIn]: that loyalty account already belongs to Alice Nguyen.
+   -> succeeded? false
+
+==================================================================
+  6. Loyalty points: earn & redeem
+==================================================================
+Alice earned 500 points -> balance = 500
+ERROR [points]: insufficient points (have 500, need 999).
+After redeeming 200 -> balance = 300
+
+==================================================================
+  7. redeems : many-to-many (LoyaltyAccount 0..* -- 0..* Reward)
+==================================================================
+Alice's membership redeemed:
+   - Reward 'Movie Ticket' (#R01, cost=150 pts)
+   - Reward 'Free Coffee' (#R02, cost=50 pts)
+'Free Coffee' was redeemed by 2 member(s):
+   - member L900 (Alice Nguyen)
+   - member L902 (Bob Tremblay)
+Alice un-redeems the movie ticket...
+Alice's membership now has 1 reward(s).
+Remove Bob from the coffee reward via Reward.removeRedeemer()...
+'Free Coffee' now has 1 member(s).
+
+==================================================================
+  8. enrolsIn : un-enrol via removeLoyaltyAccount(la)
+==================================================================
+Bob Tremblay loyalty account(s): []
+
+==================================================================
+  9. Summary
+==================================================================
+Alice Nguyen: 3 accounts, loyalty = [LoyaltyAccount #L900 (points=300)]
+Bob Tremblay: 0 accounts, loyalty = []
+Cafe Mont: 0 accounts, loyalty = []
+Demonstration complete.

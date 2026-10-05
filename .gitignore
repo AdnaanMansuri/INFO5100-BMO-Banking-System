@@ -1,0 +1,14 @@
+# Build output
+target/
+*.class
+
+# IDE / OS files
+.idea/
+*.iml
+.vscode/
+nbproject/private/
+.DS_Store
+Thumbs.db
+
+# Assignment brief (not part of the submission)
+Assignment 2 - UML Class Diagrams.pdf
